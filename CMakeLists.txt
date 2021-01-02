@@ -20,6 +20,10 @@ set(${OUTPUT_DIRECTORY} ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE})
 set(VENDOR_BINARY_DIR ${CMAKE_BINARY_DIR}/vendor)
 set(VENDOR_SOURCE_DIR ${CMAKE_SOURCE_DIR}/vendor)
 
+# spdlog - for logging
+add_subdirectory(${VENDOR_SOURCE_DIR}/spdlog ${VENDOR_BINARY_DIR}/spdlog)
+list(APPEND VENDOR_INCLUDE_DIRS ${VENDOR_SOURCE_DIR}/spdlog/include)
+
 # ==== project libraries and executables ====
 
 add_subdirectory(libs/3d      ${${OUTPUT_DIRECTORY}}/obj/libs/3d)
