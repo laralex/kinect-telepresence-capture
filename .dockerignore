@@ -1,0 +1,6 @@
+*
+!apps
+!libs
+!tests
+!vendor
+!CMakeLists.txt
