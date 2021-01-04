@@ -24,7 +24,15 @@ set(VENDOR_SOURCE_DIR ${CMAKE_SOURCE_DIR}/vendor)
 add_subdirectory(${VENDOR_SOURCE_DIR}/spdlog ${VENDOR_BINARY_DIR}/spdlog)
 list(APPEND VENDOR_INCLUDE_DIRS ${VENDOR_SOURCE_DIR}/spdlog/include)
 
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/")
+find_package(k4a REQUIRED)
+list(APPEND VENDOR_LIBS ${k4a_LIBS})
+list(APPEND VENDOR_INCLUDE_DIRS ${k4a_INCLUDE_DIR})
+
 # ==== project libraries and executables ====
+
+set (CMAKE_LIBRARY_OUTPUT_DIRECTORY ${$OUTPUT_DIRECTORY}})
+set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${$OUTPUT_DIRECTORY}})
 
 add_subdirectory(libs/3d      ${${OUTPUT_DIRECTORY}}/obj/libs/3d)
 add_subdirectory(libs/camera  ${${OUTPUT_DIRECTORY}}/obj/libs/camera)

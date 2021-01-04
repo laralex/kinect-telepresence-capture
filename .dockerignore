@@ -3,4 +3,5 @@
 !libs
 !tests
 !vendor
+!cmake
 !CMakeLists.txt
