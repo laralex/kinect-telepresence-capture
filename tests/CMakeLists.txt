@@ -1,4 +1,5 @@
 include(GoogleTest)
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 add_subdirectory(${VENDOR_SOURCE_DIR}/googletest ${VENDOR_BINARY_DIR}/googletest)
 set(gtest_targets gtest gtest_main)
 
