@@ -33,5 +33,7 @@ RUN mkdir capture-build &&\
     cmake ../capture-src -DCMAKE_BUILD_TYPE=Release -GNinja &&\
     ninja
 
+# run unit tests
+RUN /capture-build/release/all_tests
 # container startup command
 CMD /capture-build/release/capture-daemon
