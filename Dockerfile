@@ -1,4 +1,5 @@
 ARG CACHEBUST=42
+
 FROM ubuntu:18.04
 
 ENV DEBIAN_FRONTEND noninteractive
@@ -6,15 +7,13 @@ ENV DEBIAN_FRONTEND noninteractive
 # install prerequisites
 RUN apt-get update &&\
     apt-get -y install --no-install-recommends \
-        #apt-utils \
         libglu1-mesa-dev freeglut3-dev mesa-common-dev \  
         curl \
         libssl-dev \
         gnupg2 \
         software-properties-common \
         cmake \
-        build-essential \
-        ninja-build
+        build-essential
 
 # install Azure Kinect SDK
 RUN curl -sSL https://packages.microsoft.com/keys/microsoft.asc | apt-key add -&&\
@@ -30,10 +29,11 @@ ARG CACHEBUST
 COPY . /capture-src
 RUN mkdir capture-build &&\
     cd capture-build &&\
-    cmake ../capture-src -DCMAKE_BUILD_TYPE=Release -GNinja &&\
-    ninja
+    cmake ../capture-src -DCMAKE_BUILD_TYPE=Release -G"Unix Makefiles" &&\
+    make
 
 # run unit tests
 RUN /capture-build/release/all_tests
+
 # container startup command
 CMD /capture-build/release/capture-daemon
