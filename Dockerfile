@@ -15,11 +15,11 @@ RUN apt-get update &&\
         cmake \
         build-essential
 
-# install Azure Kinect SDK
+# install Azure Kinect SDK and Azure Kinect Body Tracking SDK
 RUN curl -sSL https://packages.microsoft.com/keys/microsoft.asc | apt-key add -&&\
     apt-add-repository -y https://packages.microsoft.com/ubuntu/18.04/prod &&\
     apt-get update &&\
-    ACCEPT_EULA=Y apt-get -y install libk4a1.4-dev
+    ACCEPT_EULA=Y apt-get -y install libk4a1.4-dev libk4abt1.0-dev
 
 # invalidate cache to ensure copying of latest source code 
 ARG CACHEBUST

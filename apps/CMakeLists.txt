@@ -1,9 +1,9 @@
 macro(create_executable target_name src_dir dlls)
-    file(GLOB_RECURSE CXX_SOURCES ${src_dir}/*.cpp)
-    file(GLOB_RECURSE CXX_HEADERS ${src_dir}/*.hpp)
+    file(GLOB_RECURSE CXX_SOURCES "${src_dir}/*.cpp")
+    file(GLOB_RECURSE CXX_HEADERS "${src_dir}/*.hpp")
 
-    add_executable(${target_name} ${CXX_SOURCES} ${CXX_HEADERS})
-    target_include_directories(${target_name} PRIVATE ${INCLUDE_DIRS}) 
+    add_executable(${target_name} "${CXX_SOURCES}" "${CXX_HEADERS}")
+    target_include_directories(${target_name} PRIVATE "${INCLUDE_DIRS}") 
     target_link_libraries(${target_name} ${LIBS}) 
 
     list(APPEND ${KTP_EXECUTABLE_TARGETS} ${target_name})
@@ -21,5 +21,9 @@ endmacro()
 # ==== executable targets ====
 get_filename_component(KTP_EXECUTABLES_SRC_DIR "." ABSOLUTE)
 
-create_executable(capture_daemon "${KTP_EXECUTABLES_SRC_DIR}/daemon" "${k4a_DLLS}")
+set(files_to_copy "${k4a_DLLS}")
+if (ENABLE_AZURE_KINECT_BODYTRACKING)
+    list(APPEND files_to_copy ${k4abt_DLLS_AND_AUX})
+endif()
+create_executable(capture_daemon "${KTP_EXECUTABLES_SRC_DIR}/daemon" "${files_to_copy}")
 set_target_properties(capture_daemon PROPERTIES OUTPUT_NAME "ktp_capture_daemon")

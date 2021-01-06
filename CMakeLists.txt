@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
 project(kinect-telepresence)
 
 option(ENABLE_TESTS "Build unit tests executables" ON)
+option(ENABLE_AZURE_KINECT_BODYTRACKING "Link Azure Kinect Bodytracking SDK and copy its ML model files (200 Mb)" ON)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -14,38 +15,44 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
 
 string(TOLOWER "${CMAKE_BUILD_TYPE}" CMAKE_BUILD_TYPE) # Debug to debug
 string(TOUPPER "CMAKE_RUNTIME_OUTPUT_DIRECTORY_${CMAKE_BUILD_TYPE}" OUTPUT_DIRECTORY) # debug to DEBUG
-set(${OUTPUT_DIRECTORY} ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE})
+set(${OUTPUT_DIRECTORY} "${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}")
 
 # ==== external libraries ====
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/")
 
-set(VENDOR_BINARY_DIR ${${OUTPUT_DIRECTORY}}/vendor)
-set(VENDOR_SOURCE_DIR ${CMAKE_SOURCE_DIR}/vendor)
+set(VENDOR_BINARY_DIR "${${OUTPUT_DIRECTORY}}/vendor")
+set(VENDOR_SOURCE_DIR "${CMAKE_SOURCE_DIR}/vendor")
 
 # spdlog
-add_subdirectory(${VENDOR_SOURCE_DIR}/spdlog ${VENDOR_BINARY_DIR}/spdlog)
-list(APPEND VENDOR_INCLUDE_DIRS ${VENDOR_SOURCE_DIR}/spdlog/include)
+add_subdirectory("${VENDOR_SOURCE_DIR}/spdlog" "${VENDOR_BINARY_DIR}/spdlog")
+list(APPEND VENDOR_INCLUDE_DIRS "${VENDOR_SOURCE_DIR}/spdlog/include")
 
 # azure kinect SDK
 find_package(k4a REQUIRED)
 list(APPEND VENDOR_LIBS ${k4a_LIBS})
-list(APPEND VENDOR_INCLUDE_DIRS ${k4a_INCLUDE_DIR})
+list(APPEND VENDOR_INCLUDE_DIRS "${k4a_INCLUDE_DIR}")
+
+if (ENABLE_AZURE_KINECT_BODYTRACKING)
+    find_package(k4abt REQUIRED)
+    list(APPEND VENDOR_LIBS ${k4abt_LIBS})
+    list(APPEND VENDOR_INCLUDE_DIRS ${k4abt_INCLUDE_DIR})
+endif()
 
 # ==== targets configuration utilities ====
 
 set(LIBS camera network ${VENDOR_LIBS})
-set(INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/libs ${VENDOR_INCLUDE_DIRS})
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${$OUTPUT_DIRECTORY}})
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${$OUTPUT_DIRECTORY}})
+set(INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/libs" ${VENDOR_INCLUDE_DIRS})
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${$OUTPUT_DIRECTORY}}")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${$OUTPUT_DIRECTORY}}")
 
 # ==== project targets ====
-add_subdirectory(libs ${${OUTPUT_DIRECTORY}}/obj/libs)
-add_subdirectory(apps ${${OUTPUT_DIRECTORY}}/obj/apps)
+add_subdirectory(libs "${${OUTPUT_DIRECTORY}}/obj/libs")
+add_subdirectory(apps "${${OUTPUT_DIRECTORY}}/obj/apps")
 
 if(ENABLE_TESTS)
     message(STATUS "Enabling tests")
-    add_subdirectory(tests ${${OUTPUT_DIRECTORY}}/obj/tests)
+    add_subdirectory(tests "${${OUTPUT_DIRECTORY}}/obj/tests")
 endif()
 
 # ==== compile with pedantic warnings ====
