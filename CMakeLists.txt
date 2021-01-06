@@ -37,6 +37,7 @@ if (ENABLE_AZURE_KINECT_BODYTRACKING)
     find_package(k4abt REQUIRED)
     list(APPEND VENDOR_LIBS ${k4abt_LIBS})
     list(APPEND VENDOR_INCLUDE_DIRS ${k4abt_INCLUDE_DIR})
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DENABLED_BODYTRACKING")
 endif()
 
 # ==== targets configuration utilities ====
