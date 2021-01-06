@@ -50,7 +50,7 @@ find_path(k4a_INCLUDE_DIR
     $ENV{K4A_DIR}/sdk/
     /usr/include
   PATHS
-    "${K4A_DIR_PATH}/sdk/"
+    "${K4A_DIR}/sdk/"
   PATH_SUFFIXES
     include
   REQUIRED
@@ -64,7 +64,7 @@ find_library(k4a_LIBRARY
     $ENV{K4A_DIR}/sdk/windows-desktop/amd64/release
     /usr/lib
   PATHS
-    "${K4A_DIR_PATH}/sdk/windows-desktop/amd64/release"
+    "${K4A_DIR}/sdk/windows-desktop/amd64/release"
   PATH_SUFFIXES
     lib
     x86_64-linux-gnu
@@ -79,7 +79,7 @@ find_library(k4arecord_LIBRARY
     $ENV{K4A_DIR}/sdk/windows-desktop/amd64/release
     /usr/lib
   PATHS
-    "${K4A_DIR_PATH}/sdk/windows-desktop/amd64/release"
+    "${K4A_DIR}/sdk/windows-desktop/amd64/release"
   PATH_SUFFIXES
     lib
     x86_64-linux-gnu
@@ -98,8 +98,8 @@ find_package_handle_standard_args(
 
 if(k4a_FOUND)
   if(CMAKE_HOST_WIN32)
-    get_filename_component(k4a_SHARED_LIBS_DIR "${k4a_LIBRARY}" DIRECTORY)
-    get_filename_component(k4a_SHARED_LIBS_DIR "${k4a_SHARED_LIBS_DIR}" DIRECTORY)
+    get_filename_component(k4a_SHARED_LIBS_DIR "${k4a_LIBRARY}" DIRECTORY) # lib
+    get_filename_component(k4a_SHARED_LIBS_DIR "${k4a_SHARED_LIBS_DIR}" DIRECTORY) # release
     file(GLOB k4a_DLLS "${k4a_SHARED_LIBS_DIR}/bin/*.dll")
   endif()
   
