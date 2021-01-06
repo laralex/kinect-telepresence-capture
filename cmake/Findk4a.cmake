@@ -102,55 +102,30 @@ if(k4a_FOUND)
     get_filename_component(k4a_SHARED_LIBS_DIR "${k4a_SHARED_LIBS_DIR}" DIRECTORY) # release
     file(GLOB k4a_DLLS "${k4a_SHARED_LIBS_DIR}/bin/*.dll")
   endif()
-  
-  # add_library(k4a::k4a UNKNOWN IMPORTED GLOBAL)
-  # set_target_properties(k4a::k4a PROPERTIES
-  #   INTERFACE_INCLUDE_DIRECTORIES ${k4a_INCLUDE_DIR}
-  #   IMPORTED_LOCATION ${k4a_LIBRARY}
-  #   IMPORTED_LOCATION_DEBUG ${k4a_LIBRARY})
 
-  # add_library(k4a::k4a_record UNKNOWN IMPORTED)
-  # set_target_properties(k4a::k4a_record PROPERTIES
-  #   INTERFACE_INCLUDE_DIRECTORIES ${k4a_INCLUDE_DIR}
-  #   IMPORTED_LOCATION ${k4arecord_LIBRARY}
-  #   IMPORTED_LOCATION_DEBUG ${k4arecord_LIBRARY})
+  macro(create_k4a_target target_name include_dir library)
+    add_library(${target_name} SHARED IMPORTED)
+    set_target_properties(${target_name} PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${include_dir}")
+    
+    set_property(TARGET ${target_name} APPEND PROPERTY IMPORTED_CONFIGURATIONS "RELEASE")
+    set_target_properties(${target_name} PROPERTIES IMPORTED_LINK_INTERFACE_LANGUAGES_RELEASE "CXX")
+    if(WIN32)
+      set_target_properties(${target_name} PROPERTIES IMPORTED_IMPLIB_RELEASE "${library}")
+    else()
+      set_target_properties(${target_name} PROPERTIES IMPORTED_LOCATION_RELEASE "${library}")
+    endif()
+
+    set_property(TARGET ${target_name} APPEND PROPERTY IMPORTED_CONFIGURATIONS "DEBUG")
+    set_target_properties(${target_name} PROPERTIES IMPORTED_LINK_INTERFACE_LANGUAGES_DEBUG "CXX")
+    if(WIN32)
+      set_target_properties(${target_name} PROPERTIES IMPORTED_IMPLIB_DEBUG "${library}")
+    else()
+      set_target_properties(${target_name} PROPERTIES IMPORTED_LOCATION_DEBUG "${library}")
+    endif()
+  endmacro()
 
   set(k4a_LIBS k4a::k4a k4a::k4a_record)
-  set(k4a_LIBS_FILES ${k4a_LIBRARY} ${k4arecord_LIBRARY})
-
-  foreach(i RANGE 1)
-    list(GET k4a_LIBS ${i} iter_lib)
-    list(GET k4a_LIBS_FILES ${i} iter_lib_file)
-    
-    add_library(${iter_lib} SHARED IMPORTED)
-
-    set_target_properties(${iter_lib} PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${k4a_INCLUDE_DIR}")
-    set_property(TARGET ${iter_lib} APPEND PROPERTY IMPORTED_CONFIGURATIONS "RELEASE")
-    set_target_properties(${iter_lib} PROPERTIES IMPORTED_LINK_INTERFACE_LANGUAGES_RELEASE "CXX")
-    if(WIN32)
-      set_target_properties(${iter_lib} PROPERTIES IMPORTED_IMPLIB_RELEASE "${iter_lib_file}")
-    else()
-      set_target_properties(${iter_lib} PROPERTIES IMPORTED_LOCATION_RELEASE "${iter_lib_file}")
-    endif()
-
-    set_property(TARGET ${iter_lib} APPEND PROPERTY IMPORTED_CONFIGURATIONS "DEBUG")
-    set_target_properties(${iter_lib} PROPERTIES IMPORTED_LINK_INTERFACE_LANGUAGES_DEBUG "CXX")
-    if(WIN32)
-      set_target_properties(${iter_lib} PROPERTIES IMPORTED_IMPLIB_DEBUG "${iter_lib_file}")
-    else()
-      set_target_properties(${iter_lib} PROPERTIES IMPORTED_LOCATION_DEBUG "${iter_lib_file}")
-    endif()
-
-  endforeach()
+  create_k4a_target(k4a::k4a ${k4a_INCLUDE_DIR} ${k4a_LIBRARY})
+  create_k4a_target(k4a::k4a_record ${k4a_INCLUDE_DIR} ${k4arecord_LIBRARY})
 endif()
 
-
-# find_package_handle_standard_args(
-#   k4a_depth DEFAULT_MSG
-#   k4a_depth_LIBRARY k4a_INCLUDE_DIR
-# )
-
-# if(k4a_FOUND)
-#   #set(k4a_LIBS k4a k4a_record k4a_depth)
-#   
-# endif()
