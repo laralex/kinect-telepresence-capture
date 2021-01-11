@@ -24,7 +24,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/")
 set(VENDOR_BINARY_DIR "${${OUTPUT_DIRECTORY}}/vendor")
 set(VENDOR_SOURCE_DIR "${CMAKE_SOURCE_DIR}/vendor")
 
-# spdlog
+# log - spdlog
 add_subdirectory("${VENDOR_SOURCE_DIR}/spdlog" "${VENDOR_BINARY_DIR}/spdlog")
 list(APPEND VENDOR_INCLUDE_DIRS "${VENDOR_SOURCE_DIR}/spdlog/include")
 
@@ -39,6 +39,10 @@ if (ENABLE_AZURE_KINECT_BODYTRACKING)
     list(APPEND VENDOR_INCLUDE_DIRS ${k4abt_INCLUDE_DIR})
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DENABLED_BODYTRACKING")
 endif()
+
+# json - nlohmann
+add_subdirectory("${VENDOR_SOURCE_DIR}/nlohmann_json" "${VENDOR_BINARY_DIR}/nlohmann_json")
+list(APPEND VENDOR_INCLUDE_DIRS "${VENDOR_SOURCE_DIR}/nlohmann_json/include")
 
 # ==== targets configuration utilities ====
 
