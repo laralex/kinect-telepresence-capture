@@ -82,7 +82,7 @@ if(k4abt_FOUND)
   endif()
 
   set(k4abt_LIBS k4a::k4abt)
-  include(create_k4a_target)
+  include(_aux)
   create_k4a_target(k4a::k4abt "${k4abt_INCLUDE_DIR}" "${k4abt_LIBRARY}")
 
   get_filename_component(k4abt_ROOT "${k4abt_INCLUDE_DIR}" PATH)

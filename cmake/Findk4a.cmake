@@ -104,7 +104,7 @@ if(k4a_FOUND)
   endif()
 
   list(APPEND k4a_LIBS k4a::k4a k4a::k4a_record)
-  include(create_k4a_target)
+  include(_aux)
   create_k4a_target(k4a::k4a "${k4a_INCLUDE_DIR}" "${k4a_LIBRARY}")
   create_k4a_target(k4a::k4a_record "${k4a_INCLUDE_DIR}" "${k4arecord_LIBRARY}")
 
