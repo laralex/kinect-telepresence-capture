@@ -6,6 +6,9 @@
 	path = vendor/spdlog
 	url = https://github.com/gabime/spdlog.git
 	branch = v1.8.2
-[submodule ".\\vendor\\nlohmann_json"]
-	path = .\\vendor\\nlohmann_json
+[submodule "vendor/nlohmann_json"]
+	path = vendor/nlohmann_json
 	url = https://github.com/nlohmann/json.git
+[submodule "vendor/asio"]
+	path = vendor/asio
+	url = https://github.com/chriskohlhoff/asio.git

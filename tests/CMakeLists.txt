@@ -4,13 +4,11 @@ enable_testing()
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 add_subdirectory("${VENDOR_SOURCE_DIR}/googletest" "${VENDOR_BINARY_DIR}/googletest")
 
-set(tests_libs gtest gtest_main)
-set(tests_include_dirs "${INCLUDE_DIRS}" "${gtest_SOURCE_DIR}/include" "${gtest_SOURCE_DIR}")
-
-macro(create_test_target TESTNAME FILES)
+macro(create_test_target TESTNAME FILES LIBS)
     add_executable(${TESTNAME} "${FILES}")
-    target_include_directories(${TESTNAME} PRIVATE "${tests_include_dirs}")
-    target_link_libraries(${TESTNAME} gtest_main ${ARGN})
+    target_include_directories(${TESTNAME} PRIVATE "${INCLUDE_DIRS}" "${gtest_SOURCE_DIR}/include" "${gtest_SOURCE_DIR}")
+    target_link_libraries(${TESTNAME} gtest_main ${LIBS})
+    target_compile_features(${TESTNAME} PUBLIC ${ARGN})
     gtest_discover_tests(${TESTNAME}
         SOURCES "${FILES}"
         WORKING_DIRECTORY "${${OUTPUT_DIRECTORY}}"
@@ -22,16 +20,14 @@ endmacro()
 # ==== tests ====
 file(GLOB TEST_SRC_FILES "test_*.cpp")
 
-foreach(TEST_SRC_FILE "${TEST_SRC_FILES}")
-    get_filename_component(TEST_NAME "${TEST_SRC_FILE}" NAME_WE)
-    create_test_target(${TEST_NAME} "${TEST_SRC_FILE}" ${LIBS})
-endforeach()
+create_test_target(test_camera_kinect     test_camera_kinect.cpp     "${LIBS}")
+create_test_target(test_asio_compilation  test_asio_compilation.cpp  "${LIBS}")
+create_test_target(test_network_packet    test_network_packet.cpp    "${LIBS}")
+create_test_target(test_nlohmann_json     test_nlohmann_json.cpp     "${LIBS}")
 
-add_executable(all_tests "${TEST_SRC_FILES}")
+create_test_target(all_tests "${TEST_SRC_FILES}" "${LIBS}")
 add_test(NAME all_tests COMMAND all_tests)
-target_include_directories(all_tests PRIVATE "${tests_include_dirs}")
-target_link_libraries(all_tests gtest_main ${LIBS})
-list(APPEND ${KTP_TEST_TARGETS} all_tests)
+
 
 # ==== keep cache cleaner ====
 mark_as_advanced(

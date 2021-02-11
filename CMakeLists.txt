@@ -34,9 +34,10 @@ list(APPEND VENDOR_LIBS ${k4a_LIBS})
 list(APPEND VENDOR_INCLUDE_DIRS "${k4a_INCLUDE_DIR}")
 
 if (ENABLE_AZURE_KINECT_BODYTRACKING)
+    # TODO(laralex): set specific minimal version
     find_package(k4abt REQUIRED)
     list(APPEND VENDOR_LIBS ${k4abt_LIBS})
-    list(APPEND VENDOR_INCLUDE_DIRS ${k4abt_INCLUDE_DIR})
+    list(APPEND VENDOR_INCLUDE_DIRS "${k4abt_INCLUDE_DIR}")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DENABLED_BODYTRACKING")
 endif()
 
@@ -44,10 +45,19 @@ endif()
 add_subdirectory("${VENDOR_SOURCE_DIR}/nlohmann_json" "${VENDOR_BINARY_DIR}/nlohmann_json")
 list(APPEND VENDOR_INCLUDE_DIRS "${VENDOR_SOURCE_DIR}/nlohmann_json/include")
 
+# networking - asio
+list(APPEND VENDOR_INCLUDE_DIRS "${VENDOR_SOURCE_DIR}/asio/asio/include")
+list(APPEND VENDOR_INCLUDE_DIRS "${VENDOR_SOURCE_DIR}/asio/asio")
+if (WIN32)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_WIN32_WINDOWS")
+endif()
+
 # ==== targets configuration utilities ====
 
-set(LIBS camera network ${VENDOR_LIBS})
-set(INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/libs" ${VENDOR_INCLUDE_DIRS})
+set(OWN_LIBS camera network)
+set(LIBS "${OWN_LIBS}" "${VENDOR_LIBS}")
+set(OWN_INLUDE_DIRS "${CMAKE_SOURCE_DIR}/libs")
+set(INCLUDE_DIRS "${OWN_INLUDE_DIRS}" "${VENDOR_INCLUDE_DIRS}")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${$OUTPUT_DIRECTORY}}")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${$OUTPUT_DIRECTORY}}")
 
