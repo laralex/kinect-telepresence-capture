@@ -22,7 +22,6 @@ file(GLOB TEST_SRC_FILES "test_*.cpp")
 
 create_test_target(test_camera_kinect     test_camera_kinect.cpp     "${LIBS}")
 create_test_target(test_asio_compilation  test_asio_compilation.cpp  "${LIBS}")
-create_test_target(test_network_packet    test_network_packet.cpp    "${LIBS}")
 create_test_target(test_nlohmann_json     test_nlohmann_json.cpp     "${LIBS}")
 
 create_test_target(all_tests "${TEST_SRC_FILES}" "${LIBS}")
