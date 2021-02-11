@@ -52,6 +52,11 @@ if (WIN32)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_WIN32_WINDOWS")
 endif()
 
+# parsing command line arguments 
+add_subdirectory("${VENDOR_SOURCE_DIR}/cxxopts" "${VENDOR_BINARY_DIR}/cxxopts")
+list(APPEND VENDOR_INCLUDE_DIRS "${VENDOR_SOURCE_DIR}/cxxopts/include")
+list(APPEND VENDOR_LIBS cxxopts)
+
 # ==== targets configuration utilities ====
 
 set(OWN_LIBS camera network)
