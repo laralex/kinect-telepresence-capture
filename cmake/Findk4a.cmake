@@ -108,6 +108,6 @@ if(k4a_FOUND)
   create_k4a_target(k4a::k4a "${k4a_INCLUDE_DIR}" "${k4a_LIBRARY}")
   create_k4a_target(k4a::k4a_record "${k4a_INCLUDE_DIR}" "${k4arecord_LIBRARY}")
 
-  get_filename_component(k4_ROOT "${k4_INCLUDE_DIR}" PATH)
+  get_filename_component(k4a_ROOT "${k4a_INCLUDE_DIR}" PATH)
 endif()
 
